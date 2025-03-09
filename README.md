@@ -1,7 +1,14 @@
 # Dentist React JS
-* Install Package
-```
-npm i
-* Run
-```
-npm run dev
+## Get started
+
+1. Install dependencies
+
+   ```bash
+   npm install
+   ```
+
+2. Start the app
+
+   ```bash
+    npm run dev
+   ```
