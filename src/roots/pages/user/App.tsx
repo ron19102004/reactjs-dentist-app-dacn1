@@ -1,3 +1,4 @@
+import OllamaButton from "../../../components/ollama/button.ollama";
 import SEOPageProvier from "../../../providers/seo.provider";
 
 function App() {
@@ -7,9 +8,10 @@ function App() {
         title: "User App",
       }}
     >
-      <div>
-        <h1 className="bg-red-400">hi jgfulorwfghbklqrgbhlqr</h1>
-      </div>
+      <section className="relative min-w-screen min-h-screen">
+        <OllamaButton className="absolute bottom-[10%] right-[2%]"/>
+        <h1>User App</h1>
+      </section>
     </SEOPageProvier>
   );
 }

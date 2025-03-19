@@ -1,1 +1,43 @@
 @import "tailwindcss";
+/* Định nghĩa thanh cuộn */
+*::-webkit-scrollbar {
+    transition: all; 
+    width: 8px; /* Chiều rộng thanh cuộn dọc */
+    height: 8px; /* Chiều cao thanh cuộn ngang */
+}
+
+/* Màu nền của thanh cuộn */
+*::-webkit-scrollbar-track {
+    background-color: #f0f0f0; /* Màu nền track */
+    border-radius: 10px;
+    transition: all; 
+}
+
+/* Phần di chuyển của thanh cuộn */
+*::-webkit-scrollbar-thumb {
+    background-color: #c4c4c4; /* Màu chính của thanh cuộn */
+    border-radius: 10px;
+    transition: all; 
+}
+
+/* Khi rê chuột vào thanh cuộn */
+*::-webkit-scrollbar-thumb:hover {
+    transition: all; 
+    background-color: #969696;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+  border: 1px solid #aca9a99a;
+  border-radius: 10px;
+  padding: 10px;
+}
+pre code {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
