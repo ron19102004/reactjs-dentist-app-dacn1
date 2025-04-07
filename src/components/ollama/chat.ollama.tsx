@@ -22,13 +22,16 @@ const ChatOllama: FC<ChatOllamaProps> = ({ ref }) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const socket = useRef<WebSocket | null>(null);
   const currentBotMessage = useRef<ChatMessage | null>(null);
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
-    socket.current = new WebSocket("ws://localhost:8080/ai/chat");
+    socket.current = new WebSocket("ws://103.172.79.67/ai/chat");
 
     socket.current.onopen = () => console.log("🔵 WebSocket Connected");
 
     socket.current.onmessage = (event) => {
-      const data: ChatMessageResponseStream = JSON.parse(event.data);
+      const data: ChatMessageResponseStream = JSON.parse(event.data);  
+      console.log(data);
+          
       if (
         currentBotMessage.current &&
         currentBotMessage.current.uuid === data.uuid
@@ -41,7 +44,7 @@ const ChatOllama: FC<ChatOllamaProps> = ({ ref }) => {
               .replace(
                 /```([\w-]*)\n([\s\S]*?)\n```/g,
                 '<pre><code class="language-$1">$2</code></pre>'
-              ) + data.message,
+              )+ data.message,
           uuid: data.uuid,
         };
         currentBotMessage.current = updatedMessage;
@@ -54,6 +57,10 @@ const ChatOllama: FC<ChatOllamaProps> = ({ ref }) => {
         };
         currentBotMessage.current = newMessage;
         setMessages((prev) => [...prev, newMessage]);
+      }
+      if (data.finished) {
+        currentBotMessage.current = null;
+        handleStatusButtonSend(false);
       }
     };
 
@@ -76,8 +83,25 @@ const ChatOllama: FC<ChatOllamaProps> = ({ ref }) => {
     socket.current?.send(input);
     setInput("");
     currentBotMessage.current = null;
+    handleStatusButtonSend(true);
   };
-
+  const handleStatusButtonSend = (isSend: boolean) => {
+    submitButtonRef.current?.setAttribute(
+      "disabled",
+      isSend ? "true" : "false"
+    );
+    if (isSend) {
+      submitButtonRef.current?.classList.add(
+        "opacity-50",
+        "cursor-not-allowed"
+      );
+    } else {
+      submitButtonRef.current?.classList.remove(
+        "opacity-50",
+        "cursor-not-allowed"
+      );
+    }
+  };
   return (
     // Ref sẽ thay đổi hidden thành flex-col khi được gọi
     <div
@@ -134,6 +158,7 @@ const ChatOllama: FC<ChatOllamaProps> = ({ ref }) => {
             onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           />
           <button
+            ref={submitButtonRef}
             onClick={sendMessage}
             className="ml-3 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
           >
