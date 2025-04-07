@@ -24,7 +24,7 @@ const ChatOllama: FC<ChatOllamaProps> = ({ ref }) => {
   const currentBotMessage = useRef<ChatMessage | null>(null);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
-    socket.current = new WebSocket("wss://103.172.79.67/ai/chat");
+    socket.current = new WebSocket("wss://toilaron.icu/ai/chat");
 
     socket.current.onopen = () => console.log("🔵 WebSocket Connected");
 
