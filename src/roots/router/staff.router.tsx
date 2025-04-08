@@ -12,6 +12,8 @@ import {
   UsersRound,
 } from "lucide-react";
 import ControlLayout, { Menu } from "../layouts/control.layout";
+import SecurityProvider from "../../contexts/security.context";
+import { Role } from "../../apis/index.d";
 
 const menus: Menu[] = [
   {
@@ -90,33 +92,35 @@ const menus: Menu[] = [
 ];
 
 export default [
-  layout(<ControlLayout menus={menus} />, [
-    prefix("staff", [
-      index(<Navigate replace to={"/staff/home"} />),
-      router("home", <StaffHomePage />),
-      prefix("booking", [
-        index(<>Xem lịch hẹn theo ngày cuar bs </>),
-        prefix("invoice", [
-          index(<Navigate replace to={"/staff/booking/invoice"} />),
-          router("create", <>create</>),
-          router("confirm", <>confirm</>),
+  layout(<SecurityProvider roles={[Role.STAFF]}/>, [
+    layout(<ControlLayout menus={menus} />, [
+      prefix("staff", [
+        index(<Navigate replace to={"/staff/home"} />),
+        router("home", <StaffHomePage />),
+        prefix("booking", [
+          index(<>Xem lịch hẹn theo ngày cuar bs </>),
+          prefix("invoice", [
+            index(<Navigate replace to={"/staff/booking/invoice"} />),
+            router("create", <>create</>),
+            router("confirm", <>confirm</>),
+          ]),
         ]),
-      ]),
-      prefix("service", [
-        index(<>service</>),
-        router("create", <>add</>),
-        router("edit", <>edit</>),
-      ]),
-      prefix("medicine-category", [
-        index(<>all</>),
-        router("details/:medicineId", <>details</>),
-        router("create", <>add</>),
-        router("edit", <>edit</>),
-      ]),
-      prefix("medicine", [
-        index(<>all - tìm kiếm </>),
-        router("create", <>add</>),
-        router("edit", <>edit</>),
+        prefix("service", [
+          index(<>service</>),
+          router("create", <>add</>),
+          router("edit", <>edit</>),
+        ]),
+        prefix("medicine-category", [
+          index(<>all</>),
+          router("details/:medicineId", <>details</>),
+          router("create", <>add</>),
+          router("edit", <>edit</>),
+        ]),
+        prefix("medicine", [
+          index(<>all - tìm kiếm </>),
+          router("create", <>add</>),
+          router("edit", <>edit</>),
+        ]),
       ]),
     ]),
   ]),

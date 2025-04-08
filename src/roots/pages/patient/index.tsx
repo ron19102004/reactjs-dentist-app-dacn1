@@ -1,8 +1,8 @@
-import React from "react";
-import SEOPageProvier from "../../../providers/seo.provider";
+import React, { use, useEffect } from "react";
 import OllamaButton from "../../../components/ollama/button.ollama";
 import { Button } from "../../../components/ui/button";
 import { Link } from "react-router";
+import SEOPageProvier from "../../../contexts/seo.context";
 
 const PatientHomePage: React.FC = () => {
   return (
