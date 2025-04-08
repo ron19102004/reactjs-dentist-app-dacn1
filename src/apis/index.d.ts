@@ -1,9 +1,19 @@
-
-export interface ApiResponse<T>{
-    code: number;
-    message: StringDecoder;
-    data: T | null;
-    responseTime: string
+export interface ApiResponse<T> {
+  code: number;
+  message: StringDecoder;
+  data: T | null;
+  responseTime: string;
+}
+export enum Role {
+  ADMIN = "ADMIN",
+  DENTIST = "DENTIST",
+  STAFF = "STAFF",
+  PATIENT = "PATIENT",
+}
+export interface User {
+  id: string;
+  name: string;
+  role: Role;
 }
 export interface SystemInfoData {
   systemName: string;
