@@ -3,9 +3,18 @@ import patientRouter from "./patient.router";
 import adminRouter from "./admin.router";
 import dentistRouter from "./dentist.router";
 import staffRouter from "./staff.router";
-import { FC } from "react";
+import { FC, useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import NotFound from "../pages/errors/not-found.error";
 
-const RouterRoot:FC = () => {
+const RouterRoot: FC = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // thời gian animation
+      once: true, // chỉ chạy một lần
+    });
+  }, []);
   return (
     <RouterProvider
       router={createBrowserRouter([
@@ -13,6 +22,7 @@ const RouterRoot:FC = () => {
         ...adminRouter,
         ...dentistRouter,
         ...staffRouter,
+        { path: "*", element: <NotFound /> }, //
       ])}
     />
   );
