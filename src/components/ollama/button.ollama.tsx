@@ -1,6 +1,7 @@
 import React, { Fragment, useRef } from "react";
 import ChatOllama from "./chat.ollama";
 import imgs from "../../assets/imgs";
+import { cn } from "../../lib/utils";
 interface OllamaButtonProps {
   className?: string;
 }
@@ -14,10 +15,10 @@ const OllamaButton: React.FC<OllamaButtonProps> = ({ className }) => {
   };
   return (
     <Fragment>
-      <section className={className}>
+      <section className={cn(className)}>
         <button
           onClick={handleButtonClick}
-          className="rounded-full border p-2 border-blue-100 bg-blue-100"
+          className="rounded-full border p-2 border-gray-100 bg-gray-100"
         >
           <img
             src={imgs.BotImage}
@@ -26,7 +27,7 @@ const OllamaButton: React.FC<OllamaButtonProps> = ({ className }) => {
           />
         </button>
       </section>
-      <section className="absolute xl:bottom-10 xl:right-[2%]">
+      <section className="absolute sm:bottom-10 sm:right-[2%] z-50">
         <ChatOllama ref={ollamaChatRef} />
       </section>
     </Fragment>
