@@ -1,12 +1,10 @@
 import { Outlet, RouteObject } from "react-router";
-import layout from "./custom/layout.router";
-import router from "./custom/router.router";
-import App from "../pages/user/App";
-import prefix from "./custom/prefix.router";
-import index from "./custom/index.router";
+import {index, layout, prefix, router} from "./custom/index";
+
+import PatientHomePage from "../pages/patient";
 
 export default [
-  index(<App />),
+  index(<PatientHomePage />),
   router("about", <>About</>),
   layout(<Outlet />, [
     prefix("profile", [
