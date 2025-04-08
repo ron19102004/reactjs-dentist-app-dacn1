@@ -11,7 +11,7 @@ const PatientHomePage: React.FC = () => {
         title: "Trang chủ",
       }}
     >
-      <section className="relative min-w-screen min-h-screen">
+      <section>
         <OllamaButton className="absolute bottom-[10%] right-[2%]" />
         <h1>User App</h1>
         <Link to="/admin">
