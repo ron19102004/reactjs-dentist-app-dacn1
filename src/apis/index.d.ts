@@ -10,11 +10,25 @@ export enum Role {
   STAFF = "STAFF",
   PATIENT = "PATIENT",
 }
-export interface User {
-  id: string;
-  name: string;
-  role: Role;
+export enum Gender {
+  MALE = "MALE",
+  FEMALE = "FEMALE",
 }
+export interface User {
+  id: number;
+  fullName: string;
+  email: string;
+  phone: string;
+  username: string;
+  gender: Gender; 
+  active: boolean;
+  role: Role; 
+  otpcode: string;
+  otpexpiredAt: string; 
+  createdAt: string; 
+  updatedAt: string;
+}
+
 export interface SystemInfoData {
   systemName: string;
   systemVersion: string;
