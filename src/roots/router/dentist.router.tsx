@@ -12,6 +12,8 @@ import {
   UsersRound,
 } from "lucide-react";
 import ControlLayout, { Menu } from "../layouts/control.layout";
+import SecurityProvider from "../../contexts/security.context";
+import { Role } from "../../apis/index.d";
 
 const menus: Menu[] = [
   {
@@ -72,25 +74,27 @@ const menus: Menu[] = [
   },
 ];
 export default [
-  layout(<ControlLayout menus={menus} />, [
-    prefix("dentist", [
-      index(<Navigate replace to={"/dentist/home"} />),
-      router("home", <DentistHomePage />),
-      prefix("booking", [
-        index(<DentistHomePage />),
-        router("today", <>Lich hen hom nay</>),
-        router("confirm", <>Lich hen hom nay</>),
-      ]),
-      prefix("medicine-category", [
-        index(<>all</>),
-        router("details/:medicineId", <>details</>),
-        router("create", <>add</>),
-        router("edit", <>edit</>),
-      ]),
-      prefix("medicine", [
-        index(<>all - tìm kiếm </>),
-        router("create", <>add</>),
-        router("edit", <>edit</>),
+  layout(<SecurityProvider roles={[Role.DENTIST]} />, [
+    layout(<ControlLayout menus={menus} />, [
+      prefix("dentist", [
+        index(<Navigate replace to={"/dentist/home"} />),
+        router("home", <DentistHomePage />),
+        prefix("booking", [
+          index(<DentistHomePage />),
+          router("today", <>Lich hen hom nay</>),
+          router("confirm", <>Lich hen hom nay</>),
+        ]),
+        prefix("medicine-category", [
+          index(<>all</>),
+          router("details/:medicineId", <>details</>),
+          router("create", <>add</>),
+          router("edit", <>edit</>),
+        ]),
+        prefix("medicine", [
+          index(<>all - tìm kiếm </>),
+          router("create", <>add</>),
+          router("edit", <>edit</>),
+        ]),
       ]),
     ]),
   ]),
