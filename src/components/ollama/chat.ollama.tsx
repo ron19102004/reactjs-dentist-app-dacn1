@@ -1,5 +1,6 @@
 import { FC, useEffect, useRef, useState } from "react";
 import ListView from "../list";
+import { X } from "lucide-react";
 interface ChatMessage {
   message: string;
   role: "user" | "ai";
@@ -29,9 +30,7 @@ const ChatOllama: FC<ChatOllamaProps> = ({ ref }) => {
     socket.current.onopen = () => console.log("🔵 WebSocket Connected");
 
     socket.current.onmessage = (event) => {
-      const data: ChatMessageResponseStream = JSON.parse(event.data);  
-      console.log(data);
-          
+      const data: ChatMessageResponseStream = JSON.parse(event.data);
       if (
         currentBotMessage.current &&
         currentBotMessage.current.uuid === data.uuid
@@ -44,7 +43,7 @@ const ChatOllama: FC<ChatOllamaProps> = ({ ref }) => {
               .replace(
                 /```([\w-]*)\n([\s\S]*?)\n```/g,
                 '<pre><code class="language-$1">$2</code></pre>'
-              )+ data.message,
+              ) + data.message,
           uuid: data.uuid,
         };
         currentBotMessage.current = updatedMessage;
@@ -79,38 +78,45 @@ const ChatOllama: FC<ChatOllamaProps> = ({ ref }) => {
 
   const sendMessage = () => {
     if (!input.trim()) return;
-    setMessages([...messages, { role: "user", message: input, uuid: "0" }]);
+    setMessages([
+      ...messages,
+      {
+        role: "user",
+        message: input,
+        uuid: "USER",
+      },
+    ]);
     socket.current?.send(input);
     setInput("");
     currentBotMessage.current = null;
     handleStatusButtonSend(true);
   };
   const handleStatusButtonSend = (isSend: boolean) => {
-    submitButtonRef.current?.setAttribute(
-      "disabled",
-      isSend ? "true" : "false"
-    );
-    if (isSend) {
-      submitButtonRef.current?.classList.add(
-        "opacity-50",
-        "cursor-not-allowed"
-      );
-    } else {
-      submitButtonRef.current?.classList.remove(
-        "opacity-50",
-        "cursor-not-allowed"
-      );
+    if (submitButtonRef.current) {
+      if (isSend) {
+        submitButtonRef.current.setAttribute("disabled", "");
+        submitButtonRef.current.classList.add(
+          "opacity-50",
+          "cursor-not-allowed"
+        );
+      } else {
+        submitButtonRef.current.removeAttribute("disabled");
+        submitButtonRef.current.classList.remove(
+          "opacity-50",
+          "cursor-not-allowed"
+        );
+      }
     }
   };
   return (
     // Ref sẽ thay đổi hidden thành flex-col khi được gọi
     <div
       ref={ref}
-      className="hidden flex-col items-center justify-center h-[100vh] xl:h-[70vh]"
+      className="hidden flex-col items-center justify-center h-[100vh] sm:h-[70vh]"
     >
-      <div className="w-screen h-full xl:w-sm bg-white shadow-xl xl:rounded-lg overflow-hidden flex flex-col border border-gray-300">
+      <div className="w-screen h-full sm:w-sm bg-white shadow-xl sm:rounded-lg overflow-hidden flex flex-col border border-gray-300">
         {/* Header */}
-        <div className="p-4 bg-blue-600 text-white font-semibold text-lg flex items-center justify-between">
+        <div className="p-4 bg-gray-900 text-white font-semibold text-lg flex items-center justify-between">
           <span>💬 Chatbot AI</span>
           <button
             onClick={() => {
@@ -119,7 +125,7 @@ const ChatOllama: FC<ChatOllamaProps> = ({ ref }) => {
             }}
             className="text-white px-2 py-1 rounded-lg transition"
           >
-            X
+            <X/>
           </button>
         </div>
 
@@ -131,13 +137,16 @@ const ChatOllama: FC<ChatOllamaProps> = ({ ref }) => {
           <ListView
             data={messages}
             render={(message) => {
+              const key =
+                message.uuid + Math.random().toString(36).substring(2, 15);
               return (
                 // whitespace-pre-line: Cho phép hiển thị dòng mới với \n
                 <div
-                  className={`p-3 rounded-lg text-sm max-w-[75%] whitespace-pre-line  shadow-sm ${
+                  key={key}
+                  className={`p-3 rounded-lg text-sm max-w-[75%] whitespace-pre-line border ${
                     message.role === "user"
-                      ? "bg-blue-500 text-white self-end ml-auto"
-                      : "bg-gray-100 text-gray-900 self-start"
+                      ? "bg-gray-800 text-white self-end ml-auto"
+                      : "bg-white text-gray-900 self-start"
                   }`}
                 >
                   <div dangerouslySetInnerHTML={{ __html: message.message }} />
@@ -155,12 +164,12 @@ const ChatOllama: FC<ChatOllamaProps> = ({ ref }) => {
             placeholder="Nhập tin nhắn..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+            // onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           />
           <button
             ref={submitButtonRef}
             onClick={sendMessage}
-            className="ml-3 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+            className="ml-3 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition"
           >
             🚀 Gửi
           </button>
