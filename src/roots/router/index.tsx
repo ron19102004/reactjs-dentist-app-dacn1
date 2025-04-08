@@ -1,11 +1,19 @@
 import { RouterProvider, createBrowserRouter } from "react-router";
-import userRouter from "./user.router";
+import patientRouter from "./patient.router";
 import adminRouter from "./admin.router";
+import dentistRouter from "./dentist.router";
+import staffRouter from "./staff.router";
+import { FC } from "react";
 
-const RouterRoot = () => {
+const RouterRoot:FC = () => {
   return (
     <RouterProvider
-      router={createBrowserRouter([...userRouter, ...adminRouter])}
+      router={createBrowserRouter([
+        ...patientRouter,
+        ...adminRouter,
+        ...dentistRouter,
+        ...staffRouter,
+      ])}
     />
   );
 };
