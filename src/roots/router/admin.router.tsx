@@ -15,6 +15,8 @@ import {
   ShieldMinus,
   UsersRound,
 } from "lucide-react";
+import SecurityProvider from "../../contexts/security.context";
+import { Role } from "../../apis/index.d";
 
 const menus: Menu[] = [
   {
@@ -85,26 +87,28 @@ const menus: Menu[] = [
   },
 ];
 export default [
-  layout(<ControlLayout menus={menus} />, [
-    prefix("admin", [
-      index(<Navigate to="/admin/home" replace />),
-      router("home", <AdminHomePage />),
-      prefix("account", [
-        index(<>Account</>),
-        router("lock", <>Lock</>),
-        router("unlock", <>Unlock</>),
-        router("edit-staff", <>Edit st</>),
-        router("edit-dentist", <>Edit dt</>),
-      ]),
-      prefix("experties", [
-        index(<>experties</>),
-        router("create", <>Edit</>),
-        router("edit", <>Resume</>),
-      ]),
-      prefix("system", [
-        index(<>system</>),
-        router("information", <>Edit</>),
-        router("images", <>Resume</>),
+  layout(<SecurityProvider roles={[Role.ADMIN]} />, [
+    layout(<ControlLayout menus={menus} />, [
+      prefix("admin", [
+        index(<Navigate to="/admin/home" replace />),
+        router("home", <AdminHomePage />),
+        prefix("account", [
+          index(<>Account</>),
+          router("lock", <>Lock</>),
+          router("unlock", <>Unlock</>),
+          router("edit-staff", <>Edit st</>),
+          router("edit-dentist", <>Edit dt</>),
+        ]),
+        prefix("experties", [
+          index(<>experties</>),
+          router("create", <>Edit</>),
+          router("edit", <>Resume</>),
+        ]),
+        prefix("system", [
+          index(<>system</>),
+          router("information", <>Edit</>),
+          router("images", <>Resume</>),
+        ]),
       ]),
     ]),
   ]),
