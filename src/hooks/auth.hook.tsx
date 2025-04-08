@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { Role, User } from "../apis/index.d";
+import { Gender, Role, User } from "../apis/index.d";
+import authApi, {
+  UserLoginRequest,
+  UserRegisterRequest,
+} from "../apis/auth.api";
 export interface AuthContextType {
   token: string | null;
   isAuthenticated: boolean;
@@ -9,9 +13,9 @@ export interface AuthContextType {
   errorMessage: string | null;
   userCurrent: User | null;
 
-  login(username: string, password: string): Promise<void>;
+  login(metadata: UserLoginRequest): Promise<void>;
   logout(): Promise<void>;
-  register(username: string, password: string): Promise<void>;
+  register(metadata: UserRegisterRequest): Promise<void>;
 }
 export const useAuth = (): AuthContextType => {
   const [token, setToken] = useState<string | null>(null);
@@ -21,18 +25,50 @@ export const useAuth = (): AuthContextType => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [userCurrent, setUserCurrent] = useState<User | null>(null);
 
-  const login = async (username: string, password: string) => {
-    Cookies.set("token", "value");
+  const login = async (metadata: UserLoginRequest): Promise<void> => {
+    try {
+      setIsLoading(true);
+      const response = await authApi.userLogin(metadata);
+      if (response.code !== 200) {
+        setIsError(true);
+        setErrorMessage(response.message);
+        setIsLoading(false);
+        return;
+      }
+      const { accessToken, user } = response.data!;
+      setToken(accessToken);
+      setIsAuthenticated(true);
+      setUserCurrent(user);
+      Cookies.set("token", accessToken);
+    } catch (error) {
+      setIsError(true);
+      setErrorMessage("Failed to login");
+    } finally {
+      setIsLoading(false);
+    }
   };
   const logout = async () => {
     setToken(null);
     setIsAuthenticated(false);
     setUserCurrent(null);
+    Cookies.remove("token");
   };
-  const register = async (username: string, password: string) => {
-    setToken(null);
-    setIsAuthenticated(false);
-    setUserCurrent(null);
+  const register = async (metadata: UserRegisterRequest): Promise<void> => {
+    try {
+      setIsLoading(true);
+      const response = await authApi.userRegister(metadata);
+      if (response.code !== 200) {
+        setIsError(true);
+        setErrorMessage(response.message);
+        setIsLoading(false);
+        return;
+      }
+    } catch (error) {
+      setIsError(true);
+      setErrorMessage("Failed to register");
+    } finally {
+      setIsLoading(false);
+    }
   };
   const initializeAuth = async () => {
     try {
@@ -47,9 +83,18 @@ export const useAuth = (): AuthContextType => {
         Cookies.set("token", "value");
       }
       const user: User = {
-        id: "1",
-        name: "John Doe",
+        id: 0,
+        fullName: "TEST",
+        email: "TEST",
+        phone: "TEST",
+        username: "TEST",
+        gender: Gender.MALE,
+        active: false,
         role: Role.ADMIN,
+        otpcode: "TEST",
+        otpexpiredAt: "TEST",
+        createdAt: "TEST",
+        updatedAt: "TEST",
       };
       setUserCurrent(user);
     } catch (error) {
