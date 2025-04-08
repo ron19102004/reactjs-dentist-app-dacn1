@@ -1,5 +1,6 @@
 import { createContext, FC } from "react";
 import useAuth, { AuthContextType } from "../hooks/auth.hook";
+import { UserLoginRequest, UserRegisterRequest } from "../apis/auth.api";
 
 export const AuthContext = createContext<AuthContextType>({
     token: null,
@@ -8,13 +9,13 @@ export const AuthContext = createContext<AuthContextType>({
     isError: false,
     errorMessage: null,
     userCurrent: null,
-    login: function (username: string, password: string): Promise<void> {
+    login: function (metadata: UserLoginRequest): Promise<void> {
         throw new Error("Function not implemented.");
     },
     logout: function (): Promise<void> {
         throw new Error("Function not implemented.");
     },
-    register: function (username: string, password: string): Promise<void> {
+    register: function (metadata: UserRegisterRequest): Promise<void> {
         throw new Error("Function not implemented.");
     }
 });
