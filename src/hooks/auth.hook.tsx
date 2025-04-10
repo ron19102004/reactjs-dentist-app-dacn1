@@ -78,9 +78,11 @@ export const useAuth = (): AuthContextType => {
         setToken(token);
         setIsAuthenticated(true);
       } else {
-        setToken(null);
+        const tokenF =
+          "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkdW5nMjkiLCJleHAiOjE3NDU1NzgyMTAsImlhdCI6MTc0NDI4MjIxMCwianRpIjoiNDU3ODA2ODgtMThlYy00MTM4LWE3NzUtZDI1NGUwZDU3NWJhIn0.Qhy_vyoZA52s8-617N4d8qJSSocUonrojJKCeunY7wBH6RujTKVdlLJgR6Dvn1-Lh_OWWSSXxzGeoT0qnzrf-8Hu27BxiKA7vdm4aC3h1088eWHopTFhgWxqRBpd3Ezgb-mh3bcCd9O9heiTRTIlQLeddy2lLOAVJXg5N_A4RDjPuDzQL6PC9rPWvXvVzj-PJ0QgiC-AzF2u12FeyPHyQlpwA-EicwoVlZRrD_0T1TO9AEQB5BBF61M_T-BT9ETZRUHXRf_EVnrWk99n3I0FzZlYQGZb1bgWNR0UJvLbWvrokCAWCH2msiYxXKSKeePJyNc4JD7rb015gqUJ08jANg";
+        setToken(tokenF);
         setIsAuthenticated(false);
-        Cookies.set("token", "value");
+        Cookies.set("token", tokenF);
       }
       const user: User = {
         id: 0,
@@ -105,7 +107,10 @@ export const useAuth = (): AuthContextType => {
     }
   };
   useEffect(() => {
-    initializeAuth();
+    setTimeout(() => {
+      initializeAuth();
+      console.log("Auth initialized");
+    }, 2000);
   }, []);
   return {
     token: token,

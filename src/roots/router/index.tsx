@@ -7,6 +7,7 @@ import { FC, useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import NotFound from "../pages/errors/not-found.error";
+import authRouter from "./auth.router";
 
 const RouterRoot: FC = () => {
   useEffect(() => {
@@ -18,6 +19,7 @@ const RouterRoot: FC = () => {
   return (
     <RouterProvider
       router={createBrowserRouter([
+        ...authRouter,
         ...patientRouter,
         ...adminRouter,
         ...dentistRouter,

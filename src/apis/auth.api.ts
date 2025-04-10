@@ -26,11 +26,15 @@ const userRegister = async (
   );
   return response.data;
 };
-//Login
-export type UserLoginRequest = Omit<
-  UserRegisterRequest,
-  "fullName" | "phone" | "gender" | "email"
->;
+//Login - Omit trong typescript
+// export type UserLoginRequest = Omit<
+//   UserRegisterRequest,
+//   "fullName" | "phone" | "gender" | "email"
+// >;
+export interface UserLoginRequest{
+  username: string;
+  password: string;
+}
 export interface UserLoginResponse {
   user: User;
   accessToken: string;

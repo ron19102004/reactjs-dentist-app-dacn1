@@ -1,12 +1,19 @@
-import { FC } from "react";
+import { FC, Fragment } from "react";
 import RouterRoot from "./router";
 import AuthProvider from "../contexts/auth.context";
+import NotificationProvider from "../contexts/notification.context";
+import { Toaster } from "react-hot-toast";
 
 const Root: FC = () => {
   return (
-    <AuthProvider>
-      <RouterRoot />
-    </AuthProvider>
+    <Fragment>
+      <Toaster />
+      <AuthProvider>
+        <NotificationProvider>
+          <RouterRoot />
+        </NotificationProvider>
+      </AuthProvider>
+    </Fragment>
   );
 };
 
