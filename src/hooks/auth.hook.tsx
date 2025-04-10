@@ -57,19 +57,28 @@ export const useAuth = (): AuthContextType => {
     try {
       setIsLoading(true);
       const response = await authApi.userRegister(metadata);
+  
       if (response.code !== 200) {
         setIsError(true);
         setErrorMessage(response.message);
-        setIsLoading(false);
-        return;
+        // NÉM LỖI RA NGOÀI để component xử lý
+        throw new Error(response.message);
       }
     } catch (error) {
       setIsError(true);
-      setErrorMessage("Failed to register");
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+        throw error; // Ném lỗi để component bắt được
+      } else {
+        const unknownError = new Error("Failed to register");
+        setErrorMessage(unknownError.message);
+        throw unknownError;
+      }
     } finally {
       setIsLoading(false);
     }
   };
+  
   const initializeAuth = async () => {
     try {
       setIsLoading(true);
@@ -90,7 +99,7 @@ export const useAuth = (): AuthContextType => {
         username: "TEST",
         gender: Gender.MALE,
         active: false,
-        role: Role.ADMIN,
+        role: Role.DENTIST,
         otpcode: "TEST",
         otpexpiredAt: "TEST",
         createdAt: "TEST",

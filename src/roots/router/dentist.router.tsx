@@ -14,6 +14,8 @@ import {
 import ControlLayout, { Menu } from "../layouts/control.layout";
 import SecurityProvider from "../../contexts/security.context";
 import { Role } from "../../apis/index.d";
+import CreateMedicineCategory from './../pages/dentist/medicine-category/create';
+import { CreateMedicine } from "../pages/dentist/medicine/create";
 
 const menus: Menu[] = [
   {
@@ -87,12 +89,12 @@ export default [
         prefix("medicine-category", [
           index(<>all</>),
           router("details/:medicineId", <>details</>),
-          router("create", <>add</>),
+          router("create", <CreateMedicineCategory></CreateMedicineCategory>),
           router("edit", <>edit</>),
         ]),
         prefix("medicine", [
           index(<>all - tìm kiếm </>),
-          router("create", <>add</>),
+          router("create", <CreateMedicine></CreateMedicine>),
           router("edit", <>edit</>),
         ]),
       ]),

@@ -29,6 +29,40 @@ export interface User {
   updatedAt: string;
 }
 
+export interface Expertise {
+  id: number;
+  name: string;
+  slugify: string;
+  description: string;
+  image?: string;
+}
+
+export interface MedicineCategory {
+  id: number;
+  name: string;
+  description: string;
+  image?: string; 
+}
+export interface MedicineCategory {
+  id: number;
+  name: string;
+  description: string;
+  image?: string;
+}
+
+export interface Medicine {
+  id: number;
+  name: string;
+  quantity: number;
+  supplier: string;
+  pricePerUnit: number;
+  image?: string;
+  expiryDate: string; 
+  medicineCategory: Pick<MedicineCategory, "id" | "name">;
+}
+
+
+
 export interface SystemInfoData {
   systemName: string;
   systemVersion: string;
