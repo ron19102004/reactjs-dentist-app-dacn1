@@ -1,0 +1,175 @@
+{
+    "code": 0,
+    "message": "string",
+    "data": [
+      {
+        "id": 0,
+        "date": "2025-04-11",
+        "appointmentStatus": "WAITING",
+        "notes": "string",
+        "patientResponseDto": {
+          "fullName": "string",
+          "email": "string",
+          "phone": "string"
+        },
+        "treatmentRecord": {
+          "id": 0,
+          "treatment": "string",
+          "diagnosis": "string",
+          "updatedAt": "2025-04-11T07:34:09.301Z",
+          "treatmentRecordServices": [
+            {
+              "id": 0,
+              "dentalService": {
+                "createdAt": "2025-04-11T07:34:09.301Z",
+                "updatedAt": "2025-04-11T07:34:09.301Z",
+                "id": 0,
+                "name": "string",
+                "slugify": "string",
+                "description": "string",
+                "priceOrigin": 0,
+                "priceCurrent": 0,
+                "discount": 0
+              },
+              "priceCurrent": 0,
+              "note": "string",
+              "createdAt": "2025-04-11T07:34:09.301Z"
+            }
+          ],
+          "invoice": {
+            "createdAt": "2025-04-11T07:34:09.301Z",
+            "updatedAt": "2025-04-11T07:34:09.301Z",
+            "id": 0,
+            "totalPrice": 0,
+            "paymentMethod": "CASH",
+            "paymentDate": "2025-04-11T07:34:09.301Z",
+            "collectorName": "string",
+            "treatmentRecord": {
+              "createdAt": "2025-04-11T07:34:09.301Z",
+              "updatedAt": "2025-04-11T07:34:09.301Z",
+              "id": 0,
+              "treatment": "string",
+              "diagnosis": "string",
+              "appointment": {
+                "createdAt": "2025-04-11T07:34:09.301Z",
+                "updatedAt": "2025-04-11T07:34:09.301Z",
+                "id": 0,
+                "date": "2025-04-11",
+                "appointmentStatus": "WAITING",
+                "notes": "string",
+                "user": {
+                  "createdAt": "2025-04-11T07:34:09.301Z",
+                  "updatedAt": "2025-04-11T07:34:09.301Z",
+                  "id": 0,
+                  "fullName": "string",
+                  "email": "string",
+                  "phone": "string",
+                  "username": "string",
+                  "gender": "MALE",
+                  "active": true,
+                  "role": "ADMIN",
+                  "otpcode": "string",
+                  "otpexpiredAt": "2025-04-11T07:34:09.301Z"
+                },
+                "dentist": {
+                  "createdAt": "2025-04-11T07:34:09.301Z",
+                  "updatedAt": "2025-04-11T07:34:09.301Z",
+                  "id": 0,
+                  "dateStart": "2025-04-11",
+                  "workStatus": "DOING",
+                  "active": true,
+                  "user": {
+                    "createdAt": "2025-04-11T07:34:09.301Z",
+                    "updatedAt": "2025-04-11T07:34:09.301Z",
+                    "id": 0,
+                    "fullName": "string",
+                    "email": "string",
+                    "phone": "string",
+                    "username": "string",
+                    "gender": "MALE",
+                    "active": true,
+                    "role": "ADMIN",
+                    "otpcode": "string",
+                    "otpexpiredAt": "2025-04-11T07:34:09.301Z"
+                  },
+                  "expertise": {
+                    "createdAt": "2025-04-11T07:34:09.301Z",
+                    "updatedAt": "2025-04-11T07:34:09.301Z",
+                    "id": 0,
+                    "name": "string",
+                    "slugify": "string",
+                    "description": "string",
+                    "image": "string"
+                  }
+                }
+              },
+              "medicineUseds": [
+                {
+                  "createdAt": "2025-04-11T07:34:09.301Z",
+                  "updatedAt": "2025-04-11T07:34:09.301Z",
+                  "id": 0,
+                  "quantity": 0,
+                  "guide": "string",
+                  "pricePerUnitCurrent": 0,
+                  "medicineUnit": "TABLET",
+                  "treatmentRecord": "string",
+                  "medicine": {
+                    "createdAt": "2025-04-11T07:34:09.301Z",
+                    "updatedAt": "2025-04-11T07:34:09.301Z",
+                    "id": 0,
+                    "pricePerUnit": 0,
+                    "name": "string",
+                    "quantity": 0,
+                    "supplier": "string",
+                    "image": "string",
+                    "expiryDate": "2025-04-11",
+                    "medicineUnit": "TABLET",
+                    "medicineCategory": {
+                      "createdAt": "2025-04-11T07:34:09.301Z",
+                      "updatedAt": "2025-04-11T07:34:09.301Z",
+                      "id": 0,
+                      "name": "string",
+                      "description": "string",
+                      "imageURL": "string"
+                    }
+                  }
+                }
+              ],
+              "treatmentRecordServiceList": [
+                {
+                  "createdAt": "2025-04-11T07:34:09.301Z",
+                  "updatedAt": "2025-04-11T07:34:09.301Z",
+                  "id": 0,
+                  "priceCurrent": 0,
+                  "note": "string",
+                  "dentalService": {
+                    "createdAt": "2025-04-11T07:34:09.301Z",
+                    "updatedAt": "2025-04-11T07:34:09.301Z",
+                    "id": 0,
+                    "name": "string",
+                    "slugify": "string",
+                    "description": "string",
+                    "priceOrigin": 0,
+                    "priceCurrent": 0,
+                    "discount": 0
+                  }
+                }
+              ],
+              "invoice": "string"
+            }
+          },
+          "medicineUseds": [
+            {
+              "id": 0,
+              "quantity": 0,
+              "guide": "string",
+              "name": "string",
+              "pricePerUnit": 0,
+              "unit": "TABLET"
+            }
+          ]
+        }
+      }
+    ],
+    "responseTime": "string"
+  }
