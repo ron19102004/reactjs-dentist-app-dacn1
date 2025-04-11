@@ -78,8 +78,19 @@ const updateInfo = async (
   return response.data;
 };
 
+const getInfoUser = async (token:string) :Promise<ApiResponse<User>>=> {
+  const response = await axios.get<ApiResponse<User>>(authApi("/get-user-info"),{
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  return response.data
+}
 export default {
   userRegister,
   userLogin,
   updateInfo,
+  getInfoUser
 };
