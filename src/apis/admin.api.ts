@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ApiResponse, DataNone, Role, SystemInfoData, WorkStatus } from ".";
+import { ApiResponse, DataNone, Role, SystemInfoData, WorkStatus } from "./index.d";
 import { adminApi } from "../constants/api.constant";
 
 /**

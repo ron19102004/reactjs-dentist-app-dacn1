@@ -4,7 +4,7 @@ import FooterMainLayout from "../../components/layout/footer.layout";
 
 const MainLayout: React.FC = () => {
   return (
-    <section className="relative flex flex-col min-h-screen min-w-screen">
+    <section className="relative flex flex-col min-h-screen min-w-screen ">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white shadow-md">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">

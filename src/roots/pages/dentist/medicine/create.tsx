@@ -15,6 +15,9 @@ import {
 import { Button } from "../../../../components/ui/button";
 import { Loader2 } from "lucide-react";
 import { CreateMedicineRequest } from "../../../../apis/medicine.api";
+import { MedicineUnit } from "../../../../apis/index.d";
+import useMedicine from "../../../../hooks/useMedicine.hook";
+import toast from "react-hot-toast";
 
 export interface CreateMedicineFormInput {
   name: string;
@@ -53,7 +56,8 @@ export const CreateMedicine: FC = () => {
   const [loading, setLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [categories, setCategories] = useState<MedicineCategory[]>([]);
-
+  const [medicineUnitSelected, setMedicineUnitSelected] =
+    useState<MedicineUnit>(MedicineUnit.BOTTLE);
   const {
     register,
     handleSubmit,
@@ -63,7 +67,7 @@ export const CreateMedicine: FC = () => {
   } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
-
+  const { createMedicine } = useMedicine();
   // Mock fetch categories
   useEffect(() => {
     // Giả lập fetch API
@@ -73,7 +77,18 @@ export const CreateMedicine: FC = () => {
   }, []);
 
   const onSubmit = async (data: FormData) => {
-    console.log(data);
+    await createMedicine(
+      {
+        ...data,
+        medicineUnit: medicineUnitSelected,
+      },
+      () => {
+        toast("Success");
+      },
+      (error) => {
+        toast.error(error);
+      }
+    );
   };
 
   return (

@@ -1,26 +1,27 @@
 import React from "react";
 import { cn } from "../lib/utils";
 import { ClassValue } from "clsx";
+import { Loader } from "lucide-react";
 
 interface LoadingProps {
   className?: ClassValue[];
   spinClassName?: ClassValue[];
   children?: React.ReactNode;
+  size?:number
 }
 const Loading: React.FC<LoadingProps> = ({
   className,
   children,
   spinClassName,
+  size = 35
 }) => {
   return (
     <div className={cn("text-center", className)}>
       <div className="flex justify-center">
-        <div
-          className={cn(
-            "w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin",
-            spinClassName,
-          )}
-        ></div>
+        <Loader
+          className={cn("animate-spin text-gray-500", spinClassName)}
+          size={size}
+        />
       </div>
       {children}
     </div>

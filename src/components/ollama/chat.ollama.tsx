@@ -1,6 +1,7 @@
 import { FC, useEffect, useRef, useState } from "react";
 import ListView from "../list";
 import { X } from "lucide-react";
+import { API_HOST_NAME } from "../../constants/api.constant";
 interface ChatMessage {
   message: string;
   role: "user" | "ai";
@@ -26,7 +27,7 @@ const ChatOllama: FC<ChatOllamaProps> = ({ ref }) => {
   const submitButtonRef = useRef<HTMLButtonElement>(null);
   
   useEffect(() => {
-    socket.current = new WebSocket("wss://toilaron.icu/ai/chat");
+    socket.current = new WebSocket(`ws://${API_HOST_NAME}/ai/chat`);
 
     socket.current.onopen = () => console.log("🔵 WebSocket Connected");
 

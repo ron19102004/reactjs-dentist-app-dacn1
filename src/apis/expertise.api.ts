@@ -21,8 +21,8 @@ const createExpertise = async (
   formData.append("image", data.image);
 
   const metadata = JSON.stringify({
-    name: data.image,
-    description: data.image,
+    name: data.name,
+    description: data.description,
   });
   formData.append(
     "metadata",
@@ -56,10 +56,9 @@ const updateExpertise = async (
   if (data.image) {
     formData.append("image", data.image);
   }
-
   const metadata = JSON.stringify({
-    name: data.image,
-    description: data.image,
+    name: data.name,
+    description: data.description,
   });
   formData.append(
     "metadata",

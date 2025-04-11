@@ -28,9 +28,9 @@ const systemInfoDefault: SystemInfoData = {
 const FooterMainLayout: React.FC = () => {
   const [systemInfo, setSystemInfo] =
     React.useState<SystemInfoData>(systemInfoDefault);
-  const initialize = async (): Promise<void> => {
+  const initialize = async (): Promise<void> => {    
     const systemInfoResponse: ApiResponse<SystemInfoData> =
-      await adminApi.getSystemInfo();
+      await adminApi.getSystemInfo();      
     if (systemInfoResponse.code === 200) {
       setSystemInfo(systemInfoResponse.data || systemInfoDefault);
     }
@@ -89,7 +89,7 @@ const FooterMainLayout: React.FC = () => {
                 style={{ border: 0 }}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-              ></iframe>
+                ></iframe>
             </div>
           </div>
 
