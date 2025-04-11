@@ -1,4 +1,5 @@
-const API_URL_ORIGIN:string = 'https://toilaron.icu';
+export const API_HOST_NAME:string ="192.168.1.3:8080"
+const API_URL_ORIGIN:string = 'http://' + API_HOST_NAME;
 
 
 export const authApi = (url:string) => {

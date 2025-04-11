@@ -5,7 +5,9 @@ import authApi, {
   UserLoginRequest,
   UserRegisterRequest,
 } from "../apis/auth.api";
+import { AxiosError } from "axios";
 
+export const ACCESS_TOKEN_KEY: string = "access_token";
 export interface AuthContextType {
   token: string | null;
   isAuthenticated: boolean;
@@ -42,13 +44,21 @@ export const useAuth = (): AuthContextType => {
       }
     } catch (error) {
       if (errors) errors("Request error");
+      if(error instanceof AxiosError){
+        console.log(error.response);
+        
+      }
+      
     }
-    return null
+    return null;
   };
+
   const login = async (metadata: UserLoginRequest): Promise<void> => {
     try {
       setIsLoading(true);
       const response = await authApi.userLogin(metadata);
+      console.log(response);
+      
       if (response.code !== 200) {
         setIsError(true);
         setErrorMessage(response.message);
@@ -59,7 +69,7 @@ export const useAuth = (): AuthContextType => {
       setToken(accessToken);
       setIsAuthenticated(true);
       setUserCurrent(user);
-      Cookies.set("token", accessToken);
+      Cookies.set(ACCESS_TOKEN_KEY, accessToken);
     } catch (error) {
       setIsError(true);
       setErrorMessage("Failed to login");
@@ -71,63 +81,39 @@ export const useAuth = (): AuthContextType => {
     setToken(null);
     setIsAuthenticated(false);
     setUserCurrent(null);
-    Cookies.remove("token");
+    Cookies.remove(ACCESS_TOKEN_KEY);
   };
   const register = async (metadata: UserRegisterRequest): Promise<void> => {
     try {
       setIsLoading(true);
       const response = await authApi.userRegister(metadata);
-
       if (response.code !== 200) {
         setIsError(true);
         setErrorMessage(response.message);
-        // NÉM LỖI RA NGOÀI để component xử lý
-        throw new Error(response.message);
       }
     } catch (error) {
       setIsError(true);
-      if (error instanceof Error) {
-        setErrorMessage(error.message);
-        throw error; // Ném lỗi để component bắt được
-      } else {
-        const unknownError = new Error("Failed to register");
-        setErrorMessage(unknownError.message);
-        throw unknownError;
-      }
+      setErrorMessage("Failed to register");
     } finally {
       setIsLoading(false);
     }
   };
 
   const initializeAuth = async () => {
+    console.log("Auth initialized");
     try {
       setIsLoading(true);
-      const token = Cookies.get("token");
+      const token = Cookies.get(ACCESS_TOKEN_KEY);
       if (token) {
-        setToken(token);
-        setIsAuthenticated(true);
+        const getUserInfo = await authApi.getInfoUser(token);
+        if (getUserInfo && getUserInfo.code === 200) {
+          setIsAuthenticated(true);
+          setToken(token);
+          setUserCurrent(getUserInfo.data);
+        }
       } else {
-        const tokenF =
-          "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkdW5nMjkiLCJleHAiOjE3NDU1NzgyMTAsImlhdCI6MTc0NDI4MjIxMCwianRpIjoiNDU3ODA2ODgtMThlYy00MTM4LWE3NzUtZDI1NGUwZDU3NWJhIn0.Qhy_vyoZA52s8-617N4d8qJSSocUonrojJKCeunY7wBH6RujTKVdlLJgR6Dvn1-Lh_OWWSSXxzGeoT0qnzrf-8Hu27BxiKA7vdm4aC3h1088eWHopTFhgWxqRBpd3Ezgb-mh3bcCd9O9heiTRTIlQLeddy2lLOAVJXg5N_A4RDjPuDzQL6PC9rPWvXvVzj-PJ0QgiC-AzF2u12FeyPHyQlpwA-EicwoVlZRrD_0T1TO9AEQB5BBF61M_T-BT9ETZRUHXRf_EVnrWk99n3I0FzZlYQGZb1bgWNR0UJvLbWvrokCAWCH2msiYxXKSKeePJyNc4JD7rb015gqUJ08jANg";
-        setToken(tokenF);
         setIsAuthenticated(false);
-        Cookies.set("token", tokenF);
       }
-      const user: User = {
-        id: 0,
-        fullName: "TEST",
-        email: "TEST",
-        phone: "TEST",
-        username: "TEST",
-        gender: Gender.MALE,
-        active: false,
-        role: Role.DENTIST,
-        otpcode: "TEST",
-        otpexpiredAt: "TEST",
-        createdAt: "TEST",
-        updatedAt: "TEST",
-      };
-      setUserCurrent(user);
     } catch (error) {
       setIsError(true);
       setErrorMessage("Failed to initialize authentication");
@@ -136,10 +122,7 @@ export const useAuth = (): AuthContextType => {
     }
   };
   useEffect(() => {
-    setTimeout(() => {
-      initializeAuth();
-      console.log("Auth initialized");
-    }, 2000);
+    initializeAuth();
   }, []);
   return {
     token: token,

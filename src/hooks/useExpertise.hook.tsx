@@ -1,5 +1,8 @@
 import { use } from "react";
-import expertiseApi, { CreateExpertiseRequest } from "../apis/expertise.api";
+import expertiseApi, {
+  CreateExpertiseRequest,
+  UpdateExpertiseRequest,
+} from "../apis/expertise.api";
 import { AuthContext } from "../contexts/auth.context";
 import { AuthContextType } from "./auth.hook";
 import { ApiResponse, Expertise } from "../apis/index.d";
@@ -10,9 +13,54 @@ export interface ExpertiseContextType {
     success: () => void,
     errors: (error: string) => void
   ): Promise<void>;
+  updateExpertise(
+    data: UpdateExpertiseRequest,
+    success: () => void,
+    errors: (error: string) => void
+  ): Promise<void>;
+  getAllExpertise(
+    success: (data: Array<Expertise>) => void,
+    errors: (error: string) => void
+  ): Promise<void>;
+  getDetailsBySlug(
+    slug: string,
+    success: (data: Expertise | null) => void,
+    errors: (error: string) => void
+  ): Promise<void>;
 }
 const useExpertise = (): ExpertiseContextType => {
   const { ifAuthFn } = use<AuthContextType>(AuthContext);
+  const getDetailsBySlug = async (
+    slug: string,
+    success: (data: Expertise | null) => void,
+    errors: (error: string) => void
+  ) => {
+    try {
+      const res = await expertiseApi.getExpertiseBySlugify(slug);
+      if (res.code === 200) {
+        success(res.data);
+      } else {
+        errors(res.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getAllExpertise = async (
+    success: (data: Array<Expertise>) => void,
+    errors: (error: string) => void
+  ) => {
+    try {
+      const res = await expertiseApi.getAllExpertise();
+      if (res.code === 200) {
+        success(res?.data ?? []);
+      } else {
+        errors(res.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const createExpertise = async (
     data: CreateExpertiseRequest,
     success: () => void,
@@ -32,9 +80,27 @@ const useExpertise = (): ExpertiseContextType => {
       }
     );
   };
-
+  const updateExpertise = async (
+    data: UpdateExpertiseRequest,
+    success: () => void,
+    errors: (error: string) => void
+  ) => {
+    await ifAuthFn(
+      async (token: string) => {
+        const response = await expertiseApi.updateExpertise(data, token);
+        if (response.code === 200) success();
+        else errors(response.message);
+      },
+      (error) => {
+        errors(error);
+      }
+    );
+  };
   return {
     createExpertise: createExpertise,
+    updateExpertise: updateExpertise,
+    getAllExpertise: getAllExpertise,
+    getDetailsBySlug: getDetailsBySlug,
   };
 };
 

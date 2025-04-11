@@ -5,13 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { Input } from "../../../../components/ui/input";
 import { Button } from "../../../../components/ui/button";
-import { Textarea } from "../../../../components/ui/textarea";
 import useExpertise from "../../../../hooks/useExpertise.hook";
 import { useState } from "react";
+import TextCkEditor from "../../../../components/text-editor";
 
 const schema = z.object({
   name: z.string().min(1, "Tên chuyên môn không được để trống"),
-  description: z.string(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -29,20 +28,27 @@ const CreateExpertise = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const navigate = useNavigate();
   const { createExpertise } = useExpertise();
+  const [descSize, setDescSize] = useState<number>(0);
+  const [desc, setDesc] = useState<string>("");
 
   const onSubmit = async (data: FormData) => {
     if (!imageFile) {
       toast.error("Vui lòng chọn ảnh cho chuyên môn!");
       return;
+    }    
+    if (descSize < 200) {
+      toast.error("Mô tả không được ít hơn 200 ký tự");
+      return;
     }
     await createExpertise(
       {
         name: data.name,
-        description: data.description,
+        description: desc,
         image: imageFile,
       },
       () => {
-        navigate("/expertises");
+        toast("Thêm thành công");
+        navigate("/admin/experties");
       },
       (error) => {
         console.log(error);
@@ -82,11 +88,13 @@ const CreateExpertise = () => {
           <label className="block font-semibold text-gray-800 mb-2">
             Mô tả
           </label>
-          <Textarea
-            rows={5}
-            {...register("description")}
-            placeholder="Mô tả ngắn gọn về chuyên môn"
-            className="text-lg px-4 py-3"
+          <TextCkEditor
+            changeValue={(html) => {
+              setDesc(html);
+            }}
+            changeText={(text) => {
+              setDescSize(text.length);
+            }}
           />
         </div>
 

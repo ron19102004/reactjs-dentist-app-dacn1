@@ -3,6 +3,7 @@ import { index, layout, prefix, router } from "./custom/index";
 
 import PatientHomePage from "../pages/patient";
 import MainLayout from "../layouts/main.layout";
+import ExpertiseDisplayPage from "../pages/admin/experties/display";
 
 export default [
   layout(<MainLayout />, [
@@ -15,6 +16,10 @@ export default [
         router("resume", <>Resume</>),
       ]),
       router("booking", <>Booking</>),
+    ]),
+    prefix("expertise", [
+      index(<>expertise</>),
+      router(":slug", <ExpertiseDisplayPage />),
     ]),
   ]),
 ] as RouteObject[];

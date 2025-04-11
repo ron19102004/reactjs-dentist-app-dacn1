@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { Button } from "../../../components/ui/button";
@@ -20,6 +20,8 @@ import { UserRegisterRequest } from "../../../apis/auth.api";
 import * as yup from "yup";
 import useAuth from "../../../hooks/auth.hook";
 import { Gender } from "../../../apis/index.d";
+import { AuthContext } from "../../../contexts/auth.context";
+import ListView from "../../../components/list";
 
 const registerSchema: yup.ObjectSchema<{
   fullName: string;
@@ -78,32 +80,23 @@ export default function Register() {
     resolver: yupResolver(registerSchema),
   });
 
-  const { register: registerUser } = useAuth();
+  const { register: registerUser, isError, errorMessage } = use(AuthContext);
 
   const onSubmit = async (data: UserRegisterRequest) => {
     setLoading(true);
     try {
       await registerUser(data);
-      toast.success("Đăng ký thành công!");
-      navigate("/login");
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message || "Lỗi kết nối máy chủ.");
-      } else if (error instanceof Error) {
-        toast.error(error.message);
+      if (!isError) {
+        toast.success("Đăng ký thành công!");
+        navigate("/login");
       } else {
-        toast.error("Lỗi không xác định.");
+        toast.error(errorMessage);
       }
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    AOS.init({ duration: 700 });
-    AOS.refresh();
-  }, []);
-
+  
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-100 to-white flex items-center justify-center p-4">
       <form
@@ -123,33 +116,36 @@ export default function Register() {
           Đăng ký tài khoản
         </h2>
 
-        {[
-          { name: "fullName", label: "Họ và tên", type: "text" },
-          { name: "email", label: "Email", type: "email" },
-          { name: "password", label: "Mật khẩu", type: "password" },
-          { name: "phone", label: "Số điện thoại", type: "text" },
-          { name: "username", label: "Tên đăng nhập", type: "text" },
-        ].map((field, index) => (
-          <div
-            key={field.name}
-            data-aos="fade-up"
-            data-aos-delay={150 + index * 100}
-          >
-            <Label htmlFor={field.name}>{field.label}</Label>
-            <Input
-              id={field.name}
-              type={field.type}
-              {...register(field.name as keyof UserRegisterRequest)}
-              className="mt-1"
-              placeholder={field.label}
-            />
-            {errors[field.name as keyof UserRegisterRequest] && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors[field.name as keyof UserRegisterRequest]?.message}
-              </p>
-            )}
-          </div>
-        ))}
+        <ListView
+          data={[
+            { name: "fullName", label: "Họ và tên", type: "text" },
+            { name: "email", label: "Email", type: "email" },
+            { name: "password", label: "Mật khẩu", type: "password" },
+            { name: "phone", label: "Số điện thoại", type: "text" },
+            { name: "username", label: "Tên đăng nhập", type: "text" },
+          ]}
+          render={(field, index) => (
+            <div
+              key={field.name}
+              data-aos="fade-up"
+              data-aos-delay={150 + index * 100}
+            >
+              <Label htmlFor={field.name}>{field.label}</Label>
+              <Input
+                id={field.name}
+                type={field.type}
+                {...register(field.name as keyof UserRegisterRequest)}
+                className="mt-1"
+                placeholder={field.label}
+              />
+              {errors[field.name as keyof UserRegisterRequest] && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors[field.name as keyof UserRegisterRequest]?.message}
+                </p>
+              )}
+            </div>
+          )}
+        />
 
         <div data-aos="fade-up" data-aos-delay="750">
           <Label htmlFor="gender">Giới tính</Label>

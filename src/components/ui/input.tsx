@@ -1,6 +1,6 @@
 import * as React from "react"
+import { cn } from "../../lib/utils"
 
-import { cn } from "@/lib/utils"
 
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (
@@ -18,4 +18,20 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   )
 }
 
-export { Input }
+type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+  error?: string;
+};
+
+ const InputCustom = ({ error, ...props }: InputProps) => {
+  return (
+    <div className="flex flex-col gap-1">
+      <input
+        {...props}
+        className={`border rounded px-3 py-2 ${error ? 'border-red-500' : 'border-gray-300'}`}
+      />
+      {error && <p className="text-sm text-red-500">{error}</p>}
+    </div>
+  );
+};
+
+export { Input, InputCustom}

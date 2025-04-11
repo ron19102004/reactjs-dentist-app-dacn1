@@ -13,11 +13,17 @@ import {
   MonitorCog,
   Pencil,
   ShieldMinus,
+  SquareChevronRight,
   UsersRound,
 } from "lucide-react";
 import SecurityProvider from "../../contexts/security.context";
 import { Role } from "../../apis/index.d";
 import CreateExpertise from "../pages/admin/experties/create";
+import ExpertisePage from "../pages/admin/experties";
+import ExpertiseDisplayPage from "../pages/admin/experties/display";
+import SystemInfoPanel from "../pages/admin/system/info";
+import SystemInfoEditPanel from "../pages/admin/system/info/edit";
+import SystemLogPanel from "../pages/admin/log";
 
 const menus: Menu[] = [
   {
@@ -86,6 +92,11 @@ const menus: Menu[] = [
       },
     ],
   },
+  {
+    icon: <SquareChevronRight />,
+    label: "Nhật ký hệ thống",
+    path: "/admin/logs",
+  },
 ];
 export default [
   layout(<SecurityProvider roles={[Role.ADMIN]} />, [
@@ -93,6 +104,7 @@ export default [
       prefix("admin", [
         index(<Navigate to="/admin/home" replace />),
         router("home", <AdminHomePage />),
+        router("logs", <SystemLogPanel/>),
         prefix("account", [
           index(<>Account</>),
           router("lock", <>Lock</>),
@@ -101,13 +113,17 @@ export default [
           router("edit-dentist", <>Edit dt</>),
         ]),
         prefix("experties", [
-          index(<>experties</>),
-          router("create", <CreateExpertise></CreateExpertise>),
+          index(<ExpertisePage />),
+          router(":slug", <ExpertiseDisplayPage />),
+          router("create", <CreateExpertise />),
           router("edit", <>Resume</>),
         ]),
         prefix("system", [
           index(<>system</>),
-          router("information", <>Edit</>),
+          prefix("information", [
+            index(<SystemInfoPanel />),
+            router("edit", <SystemInfoEditPanel />),
+          ]),
           router("images", <>Resume</>),
         ]),
       ]),
