@@ -14,8 +14,9 @@ import {
 import ControlLayout, { Menu } from "../layouts/control.layout";
 import SecurityProvider from "../../contexts/security.context";
 import { Role } from "../../apis/index.d";
-import CreateMedicineCategory from './../pages/dentist/medicine-category/create';
+import CreateMedicineCategory from "./../pages/dentist/medicine-category/create";
 import { CreateMedicine } from "../pages/dentist/medicine/create";
+import BookingTodayPage from "../pages/dentist/booking/booking-today";
 
 const menus: Menu[] = [
   {
@@ -75,6 +76,7 @@ const menus: Menu[] = [
     ],
   },
 ];
+
 export default [
   layout(<SecurityProvider roles={[Role.DENTIST]} />, [
     layout(<ControlLayout menus={menus} />, [
@@ -83,18 +85,18 @@ export default [
         router("home", <DentistHomePage />),
         prefix("booking", [
           index(<DentistHomePage />),
-          router("today", <>Lich hen hom nay</>),
+          router("today", <BookingTodayPage />),
           router("confirm", <>Lich hen hom nay</>),
         ]),
         prefix("medicine-category", [
           index(<>all</>),
           router("details/:medicineId", <>details</>),
-          router("create", <CreateMedicineCategory></CreateMedicineCategory>),
+          router("create", <CreateMedicineCategory />),
           router("edit", <>edit</>),
         ]),
         prefix("medicine", [
           index(<>all - tìm kiếm </>),
-          router("create", <CreateMedicine></CreateMedicine>),
+          router("create", <CreateMedicine />),
           router("edit", <>edit</>),
         ]),
       ]),

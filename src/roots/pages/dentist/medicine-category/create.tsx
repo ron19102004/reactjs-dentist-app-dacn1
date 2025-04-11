@@ -6,19 +6,16 @@ import { toast } from "react-hot-toast";
 import { Input } from "../../../../components/ui/input";
 import { Button } from "../../../../components/ui/button";
 import { Textarea } from "../../../../components/ui/textarea";
-import { useMedicineCategory } from "../../../../hooks/useMedicineCategory.hook";
+import useMedicineCategory from "../../../../hooks/useMedicineCategory.hook";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
-// Schema xác thực
 const schema = z.object({
   name: z.string().min(1, "Tên loại thuốc không được để trống"),
-  description: z.string().optional(),
+  description: z.string(),
 });
 
 type FormData = z.infer<typeof schema>;
-
-const generateSlug = (text: string) =>
-  text.toLowerCase().trim().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
 
 export default function CreateMedicineCategory() {
   const {
@@ -28,46 +25,33 @@ export default function CreateMedicineCategory() {
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
-
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { createMedicineCategory } = useMedicineCategory();
+  const { createMedicineCategory, getMedicineCategories } =
+    useMedicineCategory();
+
+  const getMedicineCategoriesQuery = useQuery({
+    queryKey: ["medicine-categories"],
+    queryFn: getMedicineCategories,
+  });
 
   const onSubmit = async (data: FormData) => {
     if (!imageFile) {
       toast.error("Vui lòng chọn ảnh cho loại thuốc!");
       return;
     }
-
-    const metadata = {
-      ...data,
-      slugify: generateSlug(data.name),
-      description: data.description || "",
-    };
-
-    const formData = new FormData();
-    formData.append("image", imageFile);
-    formData.append(
-      "metadata",
-      new Blob([JSON.stringify(metadata)], {
-        type: "application/json",
-      })
-    );
-
-    try {
-      const res = await createMedicineCategory(formData);
-
-      if (res?.code === 200 && res.data) {
-        toast.success("Tạo loại thuốc thành công!");
-        navigate("/medicine-categories");
-      } else {
-        throw new Error(res?.message || "Lỗi tạo loại thuốc");
+    await createMedicineCategory(
+      {
+        name: data.name,
+        description: data.description,
+        image: imageFile,
+      },
+      () => {},
+      (error) => {
+        console.log(error);
       }
-    } catch (err) {
-      console.error("Lỗi khi tạo loại thuốc", err);
-      toast.error("Tạo thất bại!");
-    }
+    );
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,7 +83,9 @@ export default function CreateMedicineCategory() {
         </div>
 
         <div>
-          <label className="block font-semibold text-gray-800 mb-2">Mô tả</label>
+          <label className="block font-semibold text-gray-800 mb-2">
+            Mô tả
+          </label>
           <Textarea
             rows={5}
             {...register("description")}

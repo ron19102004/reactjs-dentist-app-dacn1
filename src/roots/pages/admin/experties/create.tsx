@@ -6,20 +6,17 @@ import { toast } from "react-hot-toast";
 import { Input } from "../../../../components/ui/input";
 import { Button } from "../../../../components/ui/button";
 import { Textarea } from "../../../../components/ui/textarea";
-import { useExpertise } from "../../../../hooks/useExpertise.hook";
+import useExpertise from "../../../../hooks/useExpertise.hook";
 import { useState } from "react";
 
 const schema = z.object({
   name: z.string().min(1, "Tên chuyên môn không được để trống"),
-  description: z.string().optional(),
+  description: z.string(),
 });
 
 type FormData = z.infer<typeof schema>;
 
-const generateSlug = (text: string) =>
-  text.toLowerCase().trim().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
-
-export default function CreateExpertise() {
+const CreateExpertise = () => {
   const {
     register,
     handleSubmit,
@@ -38,35 +35,19 @@ export default function CreateExpertise() {
       toast.error("Vui lòng chọn ảnh cho chuyên môn!");
       return;
     }
-
-    const metadata = {
-      ...data,
-      slugify: generateSlug(data.name),
-      description: data.description || "",
-    };
-
-    const formData = new FormData();
-    formData.append("image", imageFile);
-    formData.append(
-      "metadata",
-      new Blob([JSON.stringify(metadata)], {
-        type: "application/json",
-      })
-    );
-
-    try {
-      const res = await createExpertise(formData);
-
-      if (res?.code === 200 && res.data) {
-        toast.success("Tạo chuyên môn thành công!");
+    await createExpertise(
+      {
+        name: data.name,
+        description: data.description,
+        image: imageFile,
+      },
+      () => {
         navigate("/expertises");
-      } else {
-        throw new Error(res?.message || "Lỗi tạo chuyên môn");
+      },
+      (error) => {
+        console.log(error);
       }
-    } catch (err) {
-      console.error("Lỗi khi tạo chuyên môn", err);
-      toast.error("Tạo thất bại!");
-    }
+    );
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,7 +79,9 @@ export default function CreateExpertise() {
         </div>
 
         <div>
-          <label className="block font-semibold text-gray-800 mb-2">Mô tả</label>
+          <label className="block font-semibold text-gray-800 mb-2">
+            Mô tả
+          </label>
           <Textarea
             rows={5}
             {...register("description")}
@@ -145,4 +128,6 @@ export default function CreateExpertise() {
       </form>
     </div>
   );
-}
+};
+
+export default CreateExpertise;

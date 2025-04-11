@@ -3,19 +3,68 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useState, useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { registerSchema } from "../../../schema/registerSchema";
 import { Button } from "../../../components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Label } from "../../../components/ui/label";
 import { Input } from "../../../components/ui/input";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../components/ui/select";
-import  { UserRegisterRequest } from "../../../apis/auth.api";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../../components/ui/select";
+import { UserRegisterRequest } from "../../../apis/auth.api";
+import * as yup from "yup";
 import useAuth from "../../../hooks/auth.hook";
 import { Gender } from "../../../apis/index.d";
 
+const registerSchema: yup.ObjectSchema<{
+  fullName: string;
+  email: string;
+  password: string;
+  phone: string;
+  username: string;
+  gender: Gender;
+}> = yup.object({
+  fullName: yup
+    .string()
+    .required("Họ và tên không được để trống")
+    .min(2, "Họ và tên phải có ít nhất 2 ký tự")
+    .max(100, "Họ và tên không được vượt quá 100 ký tự"),
+
+  email: yup
+    .string()
+    .required("Email không được để trống")
+    .email("Email không hợp lệ"),
+
+  password: yup
+    .string()
+    .required("Mật khẩu không được để trống")
+    .min(6, "Mật khẩu phải có ít nhất 6 ký tự")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).+$/,
+      "Mật khẩu phải chứa ít nhất một chữ hoa, một chữ thường, một số và một ký tự đặc biệt"
+    ),
+
+  phone: yup
+    .string()
+    .required("Vui lòng nhập số điện thoại")
+    .matches(/^(?:\+84|84|0)(3|5|7|8|9)\d{8}$/, "Số điện thoại không hợp lệ"),
+
+  username: yup
+    .string()
+    .required("Tên đăng nhập không được để trống")
+    .min(4, "Tên đăng nhập phải có ít nhất 4 ký tự")
+    .max(50, "Tên đăng nhập không được vượt quá 50 ký tự"),
+
+  gender: yup
+    .mixed<Gender>()
+    .oneOf(Object.values(Gender), "Giới tính không hợp lệ")
+    .required("Giới tính không được để trống"),
+});
 
 export default function Register() {
   const [loading, setLoading] = useState(false);
@@ -49,8 +98,6 @@ export default function Register() {
       setLoading(false);
     }
   };
-  
-
 
   useEffect(() => {
     AOS.init({ duration: 700 });
@@ -106,7 +153,9 @@ export default function Register() {
 
         <div data-aos="fade-up" data-aos-delay="750">
           <Label htmlFor="gender">Giới tính</Label>
-          <Select onValueChange={(val: Gender) => setValue("gender", val as Gender)}>
+          <Select
+            onValueChange={(val: Gender) => setValue("gender", val as Gender)}
+          >
             <SelectTrigger className="mt-1">
               <SelectValue placeholder="-- Chọn giới tính --" />
             </SelectTrigger>

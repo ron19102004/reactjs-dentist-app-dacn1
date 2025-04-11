@@ -18,7 +18,7 @@ const Loading: React.FC<LoadingProps> = ({
         <div
           className={cn(
             "w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin",
-            spinClassName
+            spinClassName,
           )}
         ></div>
       </div>

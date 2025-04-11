@@ -1,44 +1,56 @@
-import medicineCategoryApi from "../apis/medicine-category.api";
-import { useQuery } from "@tanstack/react-query";
-export const useMedicineCategory = () => {
-  const createMedicineCategory = (formData: FormData) => {
-    return medicineCategoryApi.createMedicineCategory(formData);
+import { use } from "react";
+import medicineCategoryApi, {
+  CreateMedicineCategoryRequest,
+} from "../apis/medicine-category.api";
+import { AuthContextType } from "./auth.hook";
+import { AuthContext } from "../contexts/auth.context";
+import { ApiResponse, MedicineCategory } from "../apis/index.d";
+
+export interface MedicineContextType {
+  createMedicineCategory(
+    data: CreateMedicineCategoryRequest,
+    success: () => void,
+    errors: (error: string) => void
+  ): Promise<void>;
+  getMedicineCategories(): Promise<MedicineCategory[]>;
+}
+const useMedicineCategory = (): MedicineContextType => {
+  const { ifAuthFn } = use<AuthContextType>(AuthContext);
+  const createMedicineCategory = async (
+    data: CreateMedicineCategoryRequest,
+    success: () => void,
+    errors: (error: string) => void
+  ) => {
+    await ifAuthFn(
+      async (token) => {
+        await medicineCategoryApi.createMedicineCategory(data, token);
+        success();
+      },
+      (error) => {
+        errors(error);
+      }
+    );
   };
 
-  // const createMedicineCategory = async (formData: FormData) => {
-
-  //     await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  //     const metadata = formData.get("metadata");
-  //     console.log("Mock formData:", {
-  //       metadata: JSON.parse(await (metadata as Blob).text()),
-  //       image: formData.get("image"),
-  //     });
-
-  //     return {
-  //       code: 200,
-  //       data: {
-  //         id: Math.random().toString(36).substring(2),
-  //         name: "Mocked category",
-  //       },
-  //     };
-  //   };
-
-  const getMedicineCategories = () => {
-    return medicineCategoryApi.getMedicineCategories();
-  };
-
-
-  const useMedicineCategories = () => {
-    return useQuery({
-      queryKey: ["medicine-categories"],
-      queryFn: getMedicineCategories,
-    });
+  const getMedicineCategories = async () => {
+    const res = await ifAuthFn<ApiResponse<Array<MedicineCategory>>>(
+      async (token) => {
+        return await medicineCategoryApi.getAllMedicineCategory(token);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+    if(res?.code === 200){
+      return res.data ?? []
+    }
+    return []
   };
 
   return {
-    createMedicineCategory,
-    getMedicineCategories,
-    useMedicineCategories
+    createMedicineCategory: createMedicineCategory,
+    getMedicineCategories: getMedicineCategories,
   };
 };
+
+export default useMedicineCategory;

@@ -4,29 +4,29 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../../../components/ui/button";
 import toast from "react-hot-toast";
 import { Expertise } from "../../../../apis";
-import { deleteExpertise, getAllExpertises } from "../../../../apis/expertise.api";
+// import { deleteExpertise, getAllExpertises } from "../../../../apis/expertise.api";
 
-export default function ExpertiseIndex() {
+const ExpertisePage = () => {
   const [expertises, setExpertises] = useState<Expertise[]>([]);
   const navigate = useNavigate();
 
   const fetchData = async () => {
-    try {
-      const res = await getAllExpertises();
-      if (res.code === 200 && res.data) {
-        setExpertises(res.data);
-      } else {
-        toast.error(res.message || "Lỗi khi tải dữ liệu.");
-      }
-    } catch {
-      toast.error("Không thể tải danh sách chuyên môn.");
-    }
+    // try {
+    //   const res = await getAllExpertises();
+    //   if (res.code === 200 && res.data) {
+    //     setExpertises(res.data);
+    //   } else {
+    //     toast.error(res.message || "Lỗi khi tải dữ liệu.");
+    //   }
+    // } catch {
+    //   toast.error("Không thể tải danh sách chuyên môn.");
+    // }
   };
 
   const handleDelete = async (id: number) => {
     if (window.confirm("Bạn có chắc muốn xoá?")) {
       try {
-        await deleteExpertise(id);
+        // await deleteExpertise(id);
         toast.success("Đã xoá thành công.");
         fetchData();
       } catch {
@@ -36,7 +36,7 @@ export default function ExpertiseIndex() {
   };
 
   useEffect(() => {
-    fetchData();
+    // fetchData();
   }, []);
 
   return (
@@ -60,3 +60,5 @@ export default function ExpertiseIndex() {
     </div>
   );
 }
+
+export default ExpertisePage
