@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import SecurityProvider from "../../contexts/security.context";
 import { Role } from "../../apis/index.d";
+import CreateExpertise from "../pages/admin/experties/create";
 
 const menus: Menu[] = [
   {
@@ -101,7 +102,7 @@ export default [
         ]),
         prefix("experties", [
           index(<>experties</>),
-          router("create", <>Edit</>),
+          router("create", <CreateExpertise></CreateExpertise>),
           router("edit", <>Resume</>),
         ]),
         prefix("system", [
